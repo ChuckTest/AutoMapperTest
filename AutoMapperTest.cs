@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography.X509Certificates;
 using AutoMapper;
 using NUnit.Framework;
 
@@ -32,14 +31,7 @@ namespace AutoMapperTest
         {
             try
             {
-                //frontend pass a dto to backend
-                var birthday = new DateTime(1989, 12, 30);
-                StudentDto studentDto = new StudentDto
-                {
-                    IdentityId = "320481198912305142",
-                    Name = "Chuck",
-                    Birthday = birthday.ToString("yyyy-MM-dd")
-                };
+                var studentDto = GetStudentDto();
 
                 //the backend map StudentDto to database entity Student
                 //and set the value of some property
@@ -60,6 +52,34 @@ namespace AutoMapperTest
                 Console.WriteLine(ex);
                 throw;
             }
+        }
+
+        /// <summary>
+        /// frontend pass a dto to backend
+        /// </summary>
+        /// <returns></returns>
+        private StudentDto GetStudentDto()
+        {
+            var birthday = new DateTime(1989, 12, 30);
+            var teacher = GetTeacher();
+            StudentDto studentDto = new StudentDto
+            {
+                IdentityId = "320481198912305142",
+                Name = "Chuck",
+                Birthday = birthday.ToString("yyyy-MM-dd"),
+                Teacher = teacher
+            };
+            return studentDto;
+        }
+
+        private Teacher GetTeacher()
+        {
+            Teacher teacher = new Teacher();
+            teacher.IdentityId = "";
+            teacher.Name = "Joan";
+            teacher.Birthday = new DateTime(1980, 1, 1);
+            teacher.Course = "Chinese";
+            return teacher;
         }
     }
 }
