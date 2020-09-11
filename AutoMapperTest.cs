@@ -4,60 +4,52 @@ using NUnit.Framework;
 
 namespace AutoMapperTest
 {
-    public class Person
-    {
-        public string Gender { get; set; }
-    }
-
-    public class Student : Person
-    {
-        public Student(Person source)
-        {
-            Mapper.Map(source, this);
-        }
-
-        public int Age { get; set; }
-
-        public override string ToString()
-        {
-            return $"{nameof(Gender)} = {Gender}, {nameof(Age)} = {Age}";
-        }
-    }
 
     [TestFixture]
     public class AutoMapperTest
     {
+        private IMapper mapper;
+
         [SetUp]
         public void Init()
         {
-            Mapper.Initialize(cfg => {
-                cfg.CreateMap<Person, Student>();
-            });
+            var config = new MapperConfiguration(
+                cfg => cfg.CreateMap<StudentDto, Student>(MemberList.Destination)//Check that all destination members are mapped
+                );
+            mapper = config.CreateMapper();
         }
 
-        /// <summary>
-        /// https://stackoverflow.com/a/12653899
-        /// </summary>
         [Test]
         public void Test()
         {
             try
             {
-                Person male = new Person();
-                male.Gender = "male";
+                //frontend pass a dto to backend
+                StudentDto studentDto = new StudentDto
+                {
+                    IdentityId = "320481198912305142",
+                    Name = "Chuck",
+                    Birthday = new DateTime(1989, 12, 30)
+                };
 
-                Student student = new Student(male);
-                student.Age = 10;
-
+                //the backend map StudentDto to database entity Student
+                //and set the value of some property
+                var student = mapper.Map<Student>(studentDto);
+                Assert.AreEqual(studentDto.IdentityId, student.IdentityId);
+                Assert.AreEqual(studentDto.Name, student.Name);
+                Assert.AreEqual(studentDto.Birthday, student.Birthday);
                 Console.WriteLine(student);
+
+                student.Guid = Guid.NewGuid();
+                student.CreatedBy = "admin";
+                student.CreatedOn = DateTime.UtcNow;
+
+                //then pass the student to database operation helper
             }
             catch (Exception ex)
             {
-                while (ex != null)
-                {
-                    Console.WriteLine(ex);
-                    ex = ex.InnerException;
-                }
+                Console.WriteLine(ex);
+                throw;
             }
         }
     }
