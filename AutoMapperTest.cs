@@ -1,5 +1,6 @@
 ﻿using System;
 using AutoMapper;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace AutoMapperTest
@@ -23,7 +24,10 @@ namespace AutoMapperTest
                 .CreateMap<StudentDto, Student>(MemberList.Destination)
                 .ForMember(x => x.CreatedOn,
                     opt => opt.MapFrom(source =>
-                        Convert.ToDateTime(source.Birthday))); //Check that all destination members are mapped
+                        Convert.ToDateTime(source.Birthday)))
+                .ForMember(x => x.Teacher,
+                    opt => opt.MapFrom(source =>
+                        JsonConvert.SerializeObject(source.Teacher))); //Check that all destination members are mapped
         }
 
         [Test]
