@@ -26,8 +26,9 @@ namespace AutoMapperTest
 
         public override string ToString()
         {
-            return
-                $"{nameof(IdentityId)} = {IdentityId}, {nameof(Name)} = {Name}, {nameof(Birthday)} = {Birthday:yyyy-MM-dd}";
+            var reuslt=
+                $"{nameof(IdentityId)} = {IdentityId}, {nameof(Name)} = {Name}, {nameof(Birthday)} = {Birthday:yyyy-MM-dd}, {nameof(Teacher)} = {Teacher}";
+            return reuslt;
         }
     }
 
