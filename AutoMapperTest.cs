@@ -85,5 +85,20 @@ namespace AutoMapperTest
             teacher.Course = "Chinese";
             return teacher;
         }
+
+        [Test]
+        public void UpdateExistingInstance()
+        {
+            //student dto update student
+            Student student = new Student();
+            student.Guid = Guid.NewGuid();
+            Console.WriteLine(student.Guid);
+
+            StudentDto studentDto = new StudentDto();
+            studentDto.IdentityId = "20200924-001";
+
+            _mapper.Map(studentDto, student);
+            Assert.AreEqual(studentDto.IdentityId, student.IdentityId);
+        }
     }
 }
